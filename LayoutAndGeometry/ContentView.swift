@@ -7,41 +7,42 @@
 
 import SwiftUI
 
-extension VerticalAlignment {
-//    struct MidAccountAndName: AlignmentID {
-    enum MidAccountAndName: AlignmentID {
-        static func defaultValue(in context: ViewDimensions) -> CGFloat {
-            context[.top]
-        }
-    }
-    
-    static let midAccountAndName = VerticalAlignment(MidAccountAndName.self)
-}
-
 struct ContentView: View {
     var body: some View {
-        HStack(alignment: .midAccountAndName) {
-            VStack {
-                Text("@mapledeveh")
-                    .alignmentGuide(.midAccountAndName) { d in d[VerticalAlignment.center] }
-                Image("alex-nguyen")
-                    .resizable()
-                    .frame(width: 64, height: 64)
-//                Text("Full name:")
-//                Text("Full name:")
-//                Text("Full name:")
-//                Text("Full name:")
-//                Text("Full name:")
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 0) {
+                ForEach(1..<20) { num in
+                    GeometryReader { geo in
+                        Text("Number \(num)")
+                            .font(.largeTitle)
+                            .padding()
+                            .background(.red)
+                            .rotation3DEffect(.degrees(-geo.frame(in: .global).minX) / 8, axis: (x: 0, y: 1, z: 0))
+                            .frame(width: 200, height: 200)
+                    }
+                    .frame(width: 200, height: 200)
+                }
             }
-            
-            VStack {
-//                Text("Full name:")
-//                Text("Full name:")
-//                Text("Full name:")
-//                Text("Full name:")
-                Text("ALEX NGUYEN")
-                    .alignmentGuide(.midAccountAndName) { d in d[VerticalAlignment.center] }
-                    .font(.largeTitle)
+        }
+    }
+}
+
+struct RotationView: View {
+    let colours: [Color] = [.red, .green, .blue, .orange, .pink, .purple, .yellow]
+    
+    var body: some View {
+        GeometryReader { fullView in
+            ScrollView {
+                ForEach(0..<50) { index in
+                    GeometryReader { geo in
+                        Text("Row #\(index)")
+                            .font(.title)
+                            .frame(maxWidth: .infinity)
+                            .background(colours[index % 7])
+                            .rotation3DEffect(.degrees(geo.frame(in: .global).minY - fullView.size.height / 2) / 5, axis: (x: 0, y: 1, z: 0))
+                    }
+                    .frame(height: 40)
+                }
             }
         }
     }
